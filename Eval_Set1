@@ -1,0 +1,33 @@
+		AREA OPERATION,CODE,READONLY
+		ENTRY
+		MOV R0,#3
+		MOV R5,#0
+		LDR R1,=0X40000000
+		LDR R2,[R1]
+		LDR R3,[R1,#4]
+		CMP R0,#1
+		BEQ  ADDITION
+		CMP R0,#2																			  
+		BEQ SUBSTRACT
+		CMP R0,#3
+		BEQ LOGICAND
+        
+ADDITION ADDS R4,R3,R2
+		STR R4,[R1,#8]
+        ADDCS R6,R5,#1
+		STR R6,[R1,#12]
+		B LI
+SUBSTRACT SUB R4,R3,R2
+	 	STR R4,[R1,#8]
+        ADDCS R6,R5,#1
+		STR R6,[R1,#12]
+		B LI
+LOGICAND AND R4,R3,R2
+		STR R4,[R1,#8]
+        ADDCS R6,R5,#1
+		STR R6,[R1,#12]
+		B LI
+LI      B     LI
+		END
+        
+
