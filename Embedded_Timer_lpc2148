@@ -1,0 +1,43 @@
+#include<lpc214x.h>
+#define MR0I=(1<<0)
+#define MR0R=(1<<1)
+
+#define DELAY_MS 500
+#define PRESCALE 6000
+
+void initTimer0(void);
+_irq void T0ISR(void);
+
+int main(void)
+{
+	initTimer0();
+	IODIR0=0xFFFFFFFF;
+	IOPIN0=0x0;
+	T0TCR=0x01;
+	while(1);
+}
+
+void initTimer0(void)
+{
+	T0CTCR=0X0;
+	T0PR=PRESCALE-1;
+	T0MR0=DELAY_MS-1;
+	T0MCR=MR0I | MR0R;
+
+	VICVectAddr4=(unsigned)T0ISR;
+	VICVectCnt14=0x20 | 4;
+	VICIntEnable=0x10;
+
+	T0TCR=0x02;
+}
+_irq void T0ISR(void)
+{
+	long int regVal;
+	regVal=T0IR;
+	IO0PIN~=IO0PIN;
+	T0IR=regVal;
+	VICVectAddr=0x0;
+}
+
+
+
